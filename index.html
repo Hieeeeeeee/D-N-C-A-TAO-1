@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Hệ thống Quản lý Sinh viên</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="top-header">
+    <button onclick="openLogin()">Đăng nhập</button>
+    <button onclick="openRegister()">Đăng ký</button>
+</header>
+
+<div class="modal" id="loginModal" style="display:none">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">×</span>
+        <h2>Đăng nhập</h2>
+        <input type="text" id="loginUsername" placeholder="Tên đăng nhập...">
+        <input type="password" id="loginPassword" placeholder="Mật khẩu...">
+        <button onclick="login()">Đăng nhập</button>
+        <p id="loginError" class="error"></p>
+        <p id="loginSuccess" class="success"></p>
+    </div>
+</div>
+
+<div class="modal" id="registerModal" style="display:none">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">×</span>
+        <h2>Đăng ký</h2>
+        <input type="text" id="registerUsername" placeholder="Username (8-12 ký tự chữ)...">
+        <input type="password" id="registerPassword" placeholder="Password (8-12 ký tự)...">
+        <input type="number" id="registerAge" placeholder="Tuổi (18-27)...">
+        <button onclick="register()">Đăng ký</button>
+        <p id="registerError" class="error"></p>
+        <p id="registerSuccess" class="success"></p>
+    </div>
+</div>
+
+<div class="dashboard">
+    <div class="sidebar">
+        <h3>MENU</h3>
+        <a href="#" onclick="showHome()">🏠 Trang chủ</a>
+        <a href="#" onclick="showScoreForm()">📋 Nhập điểm</a>
+        <a href="#" onclick="showSearchForm()">🔍 Quản lý sinh viên</a>
+    </div>
+
+    <div class="main">
+        <div id="homeContent">
+            <h1>Bảng điều khiển</h1>
+            <div class="cards">
+                <div class="card green">Học viên<br><b>1200</b></div>
+                <div class="card blue">Môn học<br><b>15</b></div>
+                <div class="card orange">Thời khóa biểu</div>
+            </div>
+        </div>
+
+        <div class="score-form" id="scoreForm" style="display:none">
+            <h2>Nhập điểm nhanh</h2>
+            <input type="number" id="scoreInput" placeholder="Nhập điểm (0 - 10)">
+            <button onclick="submitScore()">Lưu điểm</button>
+            <p id="scoreError" class="error"></p>
+            <p id="scoreSuccess" class="success"></p>
+        </div>
+
+        <div class="score-form" id="searchSection" style="display:none; max-width: 1000px; width: 95%;">
+            <div style="display: flex; gap: 30px;">
+                <div style="flex: 1; background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #ddd;">
+                    <h3 id="formTitle">Thêm Sinh Viên</h3>
+                    <input type="hidden" id="editIndex">
+                    <input type="text" id="inputName" placeholder="Tên sinh viên (Chữ)...">
+                    <input type="number" id="inputAge" placeholder="Tuổi (18-27)...">
+                    <input type="number" id="inputScore" placeholder="Điểm (0-10)...">
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                        <button id="btnSave" onclick="saveStudent()" style="background: #28a745; margin-top:0">LƯU</button>
+                        <button id="btnCancel" onclick="resetStudentForm()" style="background: #6c757d; margin-top:0; display:none">HỦY</button>
+                    </div>
+                    <p id="crudError" class="error"></p>
+                </div>
+
+                <div style="flex: 1.5;">
+                    <h3>Tìm kiếm & Danh sách</h3>
+                    <div style="display: flex; gap: 5px;">
+                        <input type="text" id="searchInput" placeholder="Nhập tên cần tìm..." style="margin-top:10px">
+                        <button onclick="handleSearch()" style="width: 80px; margin-top:10px; background: #1f2d3d;">TÌM</button>
+                    </div>
+                    <table border="1" style="width: 100%; margin-top: 15px; border-collapse: collapse; font-size: 14px; background: white;">
+                        <thead>
+                            <tr style="background: #1f2d3d; color: white;">
+                                <th style="padding: 10px;">Tên</th>
+                                <th>Tuổi</th>
+                                <th>Điểm</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="searchResultBody"></tbody>
+                    </table>
+                    <p id="searchError" class="error"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
