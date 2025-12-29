@@ -43,6 +43,7 @@
         <a href="#" onclick="showHome()">🏠 Trang chủ</a>
         <a href="#" onclick="showScoreForm()">📋 Nhập điểm</a>
         <a href="#" onclick="showSearchForm()">🔍 Quản lý sinh viên</a>
+        <a href="#" onclick="showPaymentForm()">💳 Thanh toán học phí</a>
     </div>
 
     <div class="main">
@@ -99,9 +100,27 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
 
-<script src="script.js"></script>
+        <div class="score-form" id="paymentSection" style="display:none; max-width: 500px;">
+            <h2>Thanh toán học phí</h2>
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border: 1px solid #ddd; text-align: left;">
+                <label><b>Chọn sinh viên:</b></label>
+                <select id="payStudentSelect" style="width: 100%; padding: 10px; margin: 10px 0; border-radius: 4px; border: 1px solid #ccc;"></select>
+                
+                <label><b>Số tín chỉ đăng ký:</b></label>
+                <input type="number" id="courseCredits" placeholder="Nhập số tín (1-20)..." style="margin-bottom: 5px;">
+                <small style="color: #666; display: block; margin-bottom: 15px;">* Đơn giá: 500.000 VNĐ / tín chỉ</small>
+                
+                <button onclick="calculateTuition()" style="background: #007bff; width: 100%; color: white; border: none; padding: 12px; cursor: pointer; border-radius: 4px;">TÍNH PHÍ & XÁC NHẬN</button>
+                
+                <div id="paymentResult" style="margin-top: 20px; padding: 15px; border-top: 2px dashed #ccc; display: none; background: #fff;">
+                    <p>Học viên: <b id="resName"></b></p>
+                    <p>Tổng tiền học phí: <span id="resTotal" style="color: #d9534f; font-weight: bold; font-size: 1.2em;"></span></p>
+                    <p id="paymentSuccess" class="success" style="margin-top: 10px; font-weight: bold;"></p>
+                </div>
+                <p id="paymentError" class="error"></p>
+            </div>
+        </div>
+    </div> </div> <script src="script.js"></script>
 </body>
 </html>

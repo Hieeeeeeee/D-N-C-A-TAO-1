@@ -15,23 +15,79 @@ function openRegister() { clearMessages(); document.getElementById("registerModa
 function closeModal() { document.querySelectorAll('.modal').forEach(m => m.style.display = "none"); }
 function clearMessages() { document.querySelectorAll(".error, .success").forEach(p => p.innerHTML = ""); }
 
-function showHome() {
-    document.getElementById("homeContent").style.display = "block";
+// Hàm ẩn tất cả các section để chuyển đổi menu mượt mà
+function hideAllSections() {
+    document.getElementById("homeContent").style.display = "none";
     document.getElementById("scoreForm").style.display = "none";
     document.getElementById("searchSection").style.display = "none";
+    document.getElementById("paymentSection").style.display = "none";
+}
+
+function showHome() {
+    hideAllSections();
+    document.getElementById("homeContent").style.display = "block";
 }
 
 function showScoreForm() {
-    document.getElementById("homeContent").style.display = "none";
+    hideAllSections();
     document.getElementById("scoreForm").style.display = "block";
-    document.getElementById("searchSection").style.display = "none";
 }
 
 function showSearchForm() {
-    document.getElementById("homeContent").style.display = "none";
-    document.getElementById("scoreForm").style.display = "none";
+    hideAllSections();
     document.getElementById("searchSection").style.display = "block";
     renderSearchTable(listStudents);
+}
+
+/* ================= CHỨC NĂNG THANH TOÁN (MỚI) ================= */
+
+function showPaymentForm() {
+    hideAllSections();
+    document.getElementById("paymentSection").style.display = "block";
+    
+    // Đổ danh sách sinh viên hiện có vào ô chọn (Select)
+    const select = document.getElementById("payStudentSelect");
+    if (listStudents.length === 0) {
+        select.innerHTML = '<option value="">Chưa có sinh viên</option>';
+    } else {
+        select.innerHTML = listStudents.map(s => `<option value="${s.name}">${s.name}</option>`).join('');
+    }
+}
+
+function calculateTuition() {
+    clearMessages();
+    const creditsVal = document.getElementById("courseCredits").value.trim();
+    const studentName = document.getElementById("payStudentSelect").value;
+    const err = document.getElementById("paymentError");
+    const success = document.getElementById("paymentSuccess");
+    const resDiv = document.getElementById("paymentResult");
+
+    // Reset giao diện kết quả
+    resDiv.style.display = "none";
+
+    // 1. Kiểm thử lớp rỗng
+    if (!creditsVal || !studentName) {
+        err.innerText = "LỖI: Vui lòng chọn sinh viên và nhập số tín chỉ!";
+        return;
+    }
+
+    const credits = Number(creditsVal);
+
+    // 2. Kiểm thử giá trị biên (Số tín chỉ từ 1 - 20)
+    if (isNaN(credits) || credits < 1 || credits > 20) {
+        err.innerText = "LỖI: Số tín chỉ phải là số từ 1 đến 20!";
+        return;
+    }
+
+    // Tính toán tiền (Đơn giá 500.000 VNĐ / tín chỉ)
+    const pricePerCredit = 500000;
+    const total = credits * pricePerCredit;
+
+    // Hiển thị kết quả thành công
+    resDiv.style.display = "block";
+    document.getElementById("resName").innerText = studentName;
+    document.getElementById("resTotal").innerText = total.toLocaleString('vi-VN') + " VNĐ";
+    success.innerText = "Hệ thống đã xác nhận thanh toán thành công!";
 }
 
 /* ================= QUẢN LÝ SINH VIÊN (CRUD) ================= */
@@ -60,13 +116,11 @@ function saveStudent() {
     const editIndex = document.getElementById("editIndex").value;
     const err = document.getElementById("crudError");
 
-    // 1. Kiểm thử lớp rỗng
     if (!name || !ageVal || !scoreVal) {
         err.innerText = "LỖI: Tên, tuổi và điểm không được để trống!";
         return;
     }
 
-    // 2. Kiểm thử tên chỉ chứa chữ
     const nameRegex = /^[A-Za-zÀ-ỹ\s]+$/; 
     if (!nameRegex.test(name)) {
         err.innerText = "LỖI: Tên phải là ký tự chữ!";
@@ -76,13 +130,11 @@ function saveStudent() {
     const age = Number(ageVal);
     const score = Number(scoreVal);
 
-    // 3. Kiểm thử giá trị biên Tuổi (18-27)
     if (isNaN(age) || age < 18 || age > 27) {
         err.innerText = "LỖI: Tuổi phải từ 18-27!";
         return;
     }
 
-    // 4. Kiểm thử giá trị biên Điểm (0-10)
     if (isNaN(score) || score < 0 || score > 10) {
         err.innerText = "LỖI: Điểm phải từ 0-10!";
         return;
@@ -143,7 +195,6 @@ function handleSearch() {
     renderSearchTable(filtered);
 }
 
-/* LOGIN / REGISTER / SCORE */
 /* 1. CHỨC NĂNG ĐĂNG KÝ (Bắt lỗi User phải là chữ) */
 function register() {
     clearMessages();
@@ -153,38 +204,31 @@ function register() {
     const err = document.getElementById("registerError");
     const suc = document.getElementById("registerSuccess");
 
-    // --- KIỂM THỬ LỚP RỖNG ---
     if (!u || !p || !a) {
         err.innerHTML = "LỖI: Thông tin đăng ký không được để trống!";
         return;
     }
 
-    // --- KIỂM THỬ ĐỊNH DẠNG USER (Phải là ký tự chữ) ---
-    // Regex /^[A-Za-z]+$/ đảm bảo chỉ chứa chữ cái A-Z và a-z
     const alphaRegex = /^[A-Za-z]+$/;
     if (!alphaRegex.test(u)) {
         err.innerHTML = "LỖI: Tên đăng nhập phải là ký tự chữ (không chứa số hoặc ký tự đặc biệt)!";
         return;
     }
 
-    // --- KIỂM THỬ ĐỘ DÀI (8-12 ký tự) ---
     if (u.length < 8 || u.length > 12) {
         err.innerHTML = "LỖI: Tên đăng nhập phải từ 8 đến 12 ký tự.";
         return;
     }
 
-    // --- KIỂM THỬ TUỔI (18-27) ---
     if (a < 18 || a > 27) {
         err.innerHTML = "LỖI: Tuổi phải từ 18 đến 27.";
         return;
     }
 
-    // Nếu vượt qua tất cả các lớp kiểm thử
     savedUser = { username: u, password: p, age: a };
     suc.innerText = "Đăng ký thành công!";
 }
 
-/* 2. CHỨC NĂNG ĐĂNG NHẬP (Bắt lỗi User phải là chữ) */
 /* 2. CHỨC NĂNG ĐĂNG NHẬP (Bắt lỗi định dạng và sai tài khoản/mật khẩu) */
 function login() {
     clearMessages();
@@ -192,32 +236,26 @@ function login() {
     const p = document.getElementById("loginPassword").value.trim();
     const err = document.getElementById("loginError");
 
-    // --- 1. KIỂM THỬ LỚP RỖNG ---
     if (!u || !p) {
         err.innerText = "LỖI: Tên đăng nhập và mật khẩu không được để trống!";
         return;
     }
 
-    // --- 2. KIỂM THỬ ĐỊNH DẠNG USER (Phải là ký tự chữ) ---
     const alphaRegex = /^[A-Za-z]+$/;
     if (!alphaRegex.test(u)) {
         err.innerText = "LỖI: Tên đăng nhập không hợp lệ (Phải là ký tự chữ)!";
         return;
     }
 
-    // --- 3. KIỂM THỬ SAI TÀI KHOẢN / MẬT KHẨU ---
-    // Kiểm tra xem đã có tài khoản nào được đăng ký trong savedUser chưa
     if (!savedUser) {
         err.innerText = "LỖI: Tài khoản không tồn tại. Vui lòng đăng ký trước!";
         return;
     }
 
-    // So khớp dữ liệu nhập vào với dữ liệu đã lưu
     if (u === savedUser.username && p === savedUser.password) {
         document.getElementById("loginSuccess").innerText = "Đăng nhập thành công!";
         setTimeout(closeModal, 800);
     } else {
-        // Nếu User đúng nhưng Pass sai, hoặc ngược lại, hoặc sai cả hai
         err.innerText = "LỖI: Tên đăng nhập hoặc mật khẩu không chính xác!";
     }
 }

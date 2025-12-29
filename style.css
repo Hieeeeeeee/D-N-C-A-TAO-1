@@ -89,17 +89,11 @@ body {
     font-size: 16px;
 }
 
-.green {
-    background: #28a745;
-}
-.blue {
-    background: #007bff;
-}
-.orange {
-    background: #fd7e14;
-}
+.green { background: #28a745; }
+.blue { background: #007bff; }
+.orange { background: #fd7e14; }
 
-/* ================= SCORE FORM ================= */
+/* ================= SCORE FORM & COMMON FORMS ================= */
 .score-form {
     display: none;
     margin-top: 30px;
@@ -107,29 +101,68 @@ body {
     background: white;
     padding: 20px;
     border-radius: 6px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Thêm đổ bóng cho chuyên nghiệp */
 }
 
 .score-form h2 {
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    font-size: 20px;
+    color: #333;
 }
 
 .score-form input,
+.score-form select, /* Bổ sung cho dropdown chọn sinh viên */
 .score-form button {
     width: 100%;
     padding: 10px;
     margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
 .score-form button {
     background: #0d6efd;
     color: white;
     border: none;
-    border-radius: 4px;
     cursor: pointer;
+    font-weight: bold;
 }
 
 .score-form button:hover {
     background: #084298;
+}
+
+/* Tùy chỉnh riêng cho bảng danh sách sinh viên */
+table {
+    border-collapse: collapse;
+    background: white;
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 12px 8px;
+}
+
+/* ================= THANH TOÁN SECTION (MỚI) ================= */
+#paymentSection label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+    font-size: 14px;
+    color: #555;
+}
+
+#paymentResult {
+    background: #fff9db; /* Màu nền nhẹ cho vùng kết quả */
+    border: 1px dashed #fab005;
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 4px;
+}
+
+#paymentResult p {
+    margin-bottom: 8px;
+    font-size: 15px;
 }
 
 /* ================= MODAL ================= */
@@ -138,7 +171,6 @@ body {
     position: fixed;
     inset: 0;
     background: rgba(0,0,0,0.45);
-    display: flex;
     justify-content: center;
     align-items: center;
     z-index: 2000;
@@ -150,10 +182,6 @@ body {
     width: 320px;
     border-radius: 8px;
     position: relative;
-}
-
-.modal-content h2 {
-    margin-bottom: 10px;
 }
 
 .close {
@@ -171,27 +199,17 @@ body {
     margin-top: 10px;
 }
 
-.modal-content button {
-    background: #0d6efd;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.modal-content button:hover {
-    background: #084298;
-}
-
 /* ================= MESSAGE ================= */
 .error {
-    color: red;
+    color: #dc3545;
     margin-top: 10px;
     font-size: 14px;
+    font-weight: bold;
 }
 
 .success {
-    color: green;
+    color: #198754;
     margin-top: 10px;
     font-size: 14px;
+    font-weight: bold;
 }
