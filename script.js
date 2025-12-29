@@ -267,3 +267,58 @@ function submitScore() {
     if (val < 0 || val > 10) { document.getElementById("scoreError").innerText = "LỖI: 0-10!"; return; }
     document.getElementById("scoreSuccess").innerText = "Đã lưu: " + val;
 }
+function calculateTuition() {
+    // Lấy giá trị từ các ô nhập liệu
+    const studentName = document.getElementById("payStudentSelect").value; // C1
+    const creditsVal = document.getElementById("courseCredits").value.trim(); // C2
+    const method = document.getElementById("paymentMethod").value; // C4
+    const agree = document.getElementById("agreeTerms").checked; // C5
+    
+    const err = document.getElementById("paymentError");
+    const success = document.getElementById("paymentSuccess");
+    const resDiv = document.getElementById("paymentResult");
+
+    // Xóa thông báo cũ mỗi lần nhấn nút
+    err.innerText = "";
+    success.innerText = "";
+    resDiv.style.display = "none";
+
+    // C1: Kiểm tra chọn sinh viên
+    if (!studentName) {
+        err.innerText = "LỖI: Vui lòng chọn sinh viên!";
+        return;
+    }
+
+    // C2: Kiểm tra rỗng số tín
+    if (!creditsVal) {
+        err.innerText = "LỖI: Vui lòng nhập số tín chỉ!";
+        return;
+    }
+
+    // C3: Kiểm tra giá trị biên (1-20)
+    const credits = Number(creditsVal);
+    if (isNaN(credits) || credits < 1 || credits > 20) {
+        err.innerText = "LỖI: Số tín chỉ phải từ 1 đến 20!";
+        return;
+    }
+
+    // C4: Kiểm tra hình thức thanh toán
+    if (!method) {
+        err.innerText = "LỖI: Vui lòng chọn phương thức thanh toán!";
+        return;
+    }
+
+    // C5: Kiểm tra đồng ý điều khoản
+    if (!agree) {
+        err.innerText = "LỖI: Bạn chưa đồng ý với điều khoản thanh toán!";
+        return;
+    }
+
+    // Nếu vượt qua tất cả (Trường hợp TH1 - Hợp lệ)
+    const total = credits * 500000;
+    resDiv.style.display = "block";
+    document.getElementById("resName").innerText = studentName;
+    document.getElementById("resMethod").innerText = method;
+    document.getElementById("resTotal").innerText = total.toLocaleString('vi-VN') + " VNĐ";
+    success.innerText = "Xác nhận thanh toán thành công!";
+}
