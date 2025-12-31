@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Hệ thống Quản lý Sinh viên</title>
+    <title>Hệ thống Quản lý Tổng Hợp</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -26,10 +26,10 @@
 <div class="modal" id="registerModal" style="display:none">
    <div class="modal-content" style="max-width: 500px; width: 90%;"> 
     <span class="close" onclick="closeModal()">×</span>
-    <h2 style="text-align: center; margin-bottom: 25px;">Đăng ký tài khoản</h2>
+    <h2 style="text-align: center; margin-bottom: 25px; padding-bottom: 30px;">Đăng ký tài khoản</h2>
 
     <div style="display: flex; align-items: center; margin-bottom: 15px;">
-        <label style="width: 150px; font-weight: bold; text-align: left;">Username:</label>
+        <label style="width: 150px; font-weight: bold; text-align: left;">Tài khoản:</label>
         <div style="flex: 1;">
             <input type="text" id="registerUsername" style="margin-top: 0;">
             <small style="display: block;">* 8-12 ký tự chữ/số</small>
@@ -37,17 +37,20 @@
     </div>
 
     <div style="display: flex; align-items: center; margin-bottom: 15px;">
-        <label style="width: 150px; font-weight: bold; text-align: left;">Password:</label>
+        <label style="width: 150px; font-weight: bold; text-align: left;">Mật khẩu:</label>
         <div style="flex: 1;">
             <input type="password" id="registerPassword" style="margin-top: 0;">
             <small style="display: block;">* 8-16 ký tự</small>
         </div>
     </div>
 
-    <div style="display: flex; align-items: center; margin-bottom: 15px;">
-        <label style="width: 150px; font-weight: bold; text-align: left;">Nhập lại:</label>
-        <input type="password" id="confirmPassword" style="flex: 1; margin-top: 0;">
+   <div style="display: flex; align-items: center; margin-bottom: 15px;">
+    <label style="width: 150px; font-weight: bold; text-align: left;">Nhập lại:</label>
+    <div style="flex: 1;">
+        <input type="password" id="confirmPassword" style="margin-top: 0; width: 100%;">
+        <small style="display: block;">* Phải trùng khớp với mật khẩu trên</small>
     </div>
+</div>
 
     <div style="display: flex; align-items: center; margin-bottom: 15px;">
         <label style="width: 150px; font-weight: bold; text-align: left;">Tuổi:</label>
@@ -79,7 +82,7 @@
         <a href="#" onclick="showScoreForm()">📋 Nhập điểm</a>
         <a href="#" onclick="showSearchForm()">🔍 Quản lý sinh viên</a>
         <a href="#" onclick="showPaymentForm()">💳 Thanh toán học phí</a>
-        <a href="#" onclick="showScholarshipForm()" style="background: ; color: white; margin-top: 10px;">🎓 Xét học bổng</a>
+        <a href="#" onclick="showScholarshipForm()" style=" color: white; margin-top: 10px;">🎓 Xét học bổng</a>
     </div>
 
     <div class="main">
