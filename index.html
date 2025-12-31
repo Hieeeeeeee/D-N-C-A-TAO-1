@@ -20,18 +20,38 @@
         <input type="password" id="loginPassword" placeholder="Mật khẩu...">
         <button onclick="login()">Đăng nhập</button>
         <p id="loginError" class="error"></p>
-        <p id="loginSuccess" class="success"></p>
     </div>
 </div>
 
 <div class="modal" id="registerModal" style="display:none">
-    <div class="modal-content">
+    <div class="modal-content" style="max-width: 400px;">
         <span class="close" onclick="closeModal()">×</span>
-        <h2>Đăng ký</h2>
-        <input type="text" id="registerUsername" placeholder="Username (8-12 ký tự chữ)...">
-        <input type="password" id="registerPassword" placeholder="Password (8-12 ký tự)...">
-        <input type="number" id="registerAge" placeholder="Tuổi (18-27)...">
-        <button onclick="register()">Đăng ký</button>
+        <h2>Đăng ký tài khoản</h2>
+        <div style="text-align: left; margin-bottom: 10px;">
+            <label>Username:</label>
+            <input type="text" id="registerUsername">
+            <small>* 8-12 ký tự chữ/số</small>
+        </div>
+        <div style="text-align: left; margin-bottom: 10px;">
+            <label>Password:</label>
+            <input type="password" id="registerPassword">
+            <small>* 8-16 ký tự</small>
+        </div>
+        <div style="text-align: left; margin-bottom: 10px;">
+            <label>Nhập lại password:</label>
+            <input type="password" id="confirmPassword">
+        </div>
+        <div style="text-align: left; margin-bottom: 10px;">
+            <label>Tuổi:</label>
+            <input type="number" id="registerAge">
+            <small>* 18-27 tuổi</small>
+        </div>
+        <div style="text-align: left; margin-bottom: 10px;">
+            <label>Số điện thoại:</label>
+            <input type="text" id="registerPhone">
+            <small>* 10 số, bắt đầu bằng 0</small>
+        </div>
+        <button onclick="register()" style="background: #28a745; color: white;">ĐĂNG KÝ</button>
         <p id="registerError" class="error"></p>
         <p id="registerSuccess" class="success"></p>
     </div>
@@ -61,42 +81,56 @@
             <input type="number" id="scoreInput" placeholder="Nhập điểm (0 - 10)">
             <button onclick="submitScore()">Lưu điểm</button>
             <p id="scoreError" class="error"></p>
-            <p id="scoreSuccess" class="success"></p>
         </div>
 
-        <div class="score-form" id="searchSection" style="display:none; max-width: 1000px; width: 95%;">
-            <div style="display: flex; gap: 30px;">
-                <div style="flex: 1; background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #ddd;">
+        <div class="score-form" id="searchSection" style="display:none; max-width: 1100px; width: 95%;">
+            <div style="display: flex; gap: 20px;">
+                <div style="flex: 1; background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #ddd; text-align: left;">
                     <h3 id="formTitle">Thêm Sinh Viên</h3>
                     <input type="hidden" id="editIndex">
-                    <input type="text" id="inputName" placeholder="Tên sinh viên (Chữ)...">
-                    <input type="number" id="inputAge" placeholder="Tuổi (18-27)...">
-                    <input type="number" id="inputScore" placeholder="Điểm (0-10)...">
-                    <div style="display: flex; gap: 10px; margin-top: 10px;">
-                        <button id="btnSave" onclick="saveStudent()" style="background: #28a745; margin-top:0">LƯU</button>
-                        <button id="btnCancel" onclick="resetStudentForm()" style="background: #6c757d; margin-top:0; display:none">HỦY</button>
+                    
+                    <label>Mã SV:</label>
+                    <input type="text" id="inputMaSV" placeholder="SV001...">
+                    <small style="color: #666; display: block; margin-bottom: 10px;">* SV + 3 chữ số</small>
+
+                    <label>Tên sinh viên:</label>
+                    <input type="text" id="inputName" placeholder="Nhập tên...">
+                    <small style="color: #666; display: block; margin-bottom: 10px;">* Chỉ dùng ký tự chữ</small>
+
+                    <label>Môn học:</label>
+                    <select id="inputSubject" style="width: 100%; padding: 8px; margin-bottom: 15px; border-radius: 4px;">
+                        <option value="">-- Chọn môn --</option>
+                        <option value="Toán rời rạc">Toán rời rạc</option>
+                        <option value="Kiểm thử phần mềm">Kiểm thử phần mềm</option>
+                        <option value="Lập trình Web">Lập trình Web</option>
+                    </select>
+
+                    <label>Điểm số:</label>
+                    <input type="number" id="inputScore" placeholder="0-10">
+                    <small style="color: #666; display: block; margin-bottom: 15px;">* Thang điểm 10</small>
+
+                    <div style="display: flex; gap: 10px;">
+                        <button id="btnSave" onclick="saveStudent()" style="background: #28a745;">LƯU</button>
+                        <button id="btnCancel" onclick="resetStudentForm()" style="background: #6c757d; display:none">HỦY</button>
                     </div>
                     <p id="crudError" class="error"></p>
                 </div>
 
-                <div style="flex: 1.5;">
-                    <h3>Tìm kiếm & Danh sách</h3>
-                    <div style="display: flex; gap: 5px;">
-                        <input type="text" id="searchInput" placeholder="Nhập tên cần tìm..." style="margin-top:10px">
-                        <button onclick="handleSearch()" style="width: 80px; margin-top:10px; background: #1f2d3d;">TÌM</button>
-                    </div>
-                    <table border="1" style="width: 100%; margin-top: 15px; border-collapse: collapse; font-size: 14px; background: white;">
+                <div style="flex: 2;">
+                    <h3>Danh sách & Tìm kiếm</h3>
+                    <input type="text" id="searchInput" onkeyup="handleSearch()" placeholder="Tìm theo tên..." style="margin-bottom: 10px;">
+                    <table border="1" style="width: 100%; border-collapse: collapse; background: white;">
                         <thead>
                             <tr style="background: #1f2d3d; color: white;">
-                                <th style="padding: 10px;">Tên</th>
-                                <th>Tuổi</th>
+                                <th>Mã SV</th>
+                                <th>Tên</th>
+                                <th>Môn học</th>
                                 <th>Điểm</th>
                                 <th>Thao tác</th>
                             </tr>
                         </thead>
                         <tbody id="searchResultBody"></tbody>
                     </table>
-                    <p id="searchError" class="error"></p>
                 </div>
             </div>
         </div>
@@ -104,36 +138,68 @@
         <div class="score-form" id="paymentSection" style="display:none; max-width: 500px;">
             <h2>Thanh toán học phí</h2>
             <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border: 1px solid #ddd; text-align: left;">
+
                 <label><b>Chọn sinh viên:</b></label>
+
                 <select id="payStudentSelect" style="width: 100%; padding: 10px; margin: 10px 0; border-radius: 4px; border: 1px solid #ccc;"></select>
+
                 
+
                 <label><b>Số tín chỉ đăng ký (1-20):</b></label>
+
                 <input type="number" id="courseCredits" placeholder="Nhập số tín..." style="margin-bottom: 5px;">
+
                 <small style="color: #666; display: block; margin-bottom: 15px;">* Đơn giá: 500.000 VNĐ / tín chỉ</small>
+
                 
+
                 <label><b>Hình thức thanh toán:</b></label>
+
                 <select id="paymentMethod" style="width: 100%; padding: 10px; margin: 10px 0; border-radius: 4px; border: 1px solid #ccc;">
+
                     <option value="">-- Chọn phương thức --</option>
+
                     <option value="Tiền mặt">Tiền mặt</option>
+
                     <option value="Chuyển khoản">Chuyển khoản</option>
+
                 </select>
 
+
+
                 <div style="margin: 15px 0; display: flex; align-items: center; gap: 8px;">
+
                     <input type="checkbox" id="agreeTerms" style="width: 18px; height: 18px; margin: 0;">
+
                     <label for="agreeTerms" style="font-weight: normal; margin: 0;">Tôi đồng ý với điều khoản thanh toán</label>
+
                 </div>
+
                 
+
                 <button onclick="calculateTuition()" style="background: #007bff; width: 100%; color: white; border: none; padding: 12px; cursor: pointer; border-radius: 4px; font-weight: bold;">TÍNH PHÍ & XÁC NHẬN</button>
+
                 
+
                 <div id="paymentResult" style="margin-top: 20px; padding: 15px; border-top: 2px dashed #ccc; display: none; background: #fff;">
+
                     <p>Học viên: <b id="resName"></b></p>
+
                     <p>Phương thức: <b id="resMethod"></b></p>
+
                     <p>Tổng tiền: <span id="resTotal" style="color: #d9534f; font-weight: bold; font-size: 1.2em;"></span></p>
+
                     <p id="paymentSuccess" class="success" style="margin-top: 10px; font-weight: bold;"></p>
+
                 </div>
+
                 <p id="paymentError" class="error"></p>
+
             </div>
-        </div>
-    </div> </div> <script src="script.js"></script>
+            </div>
+    </div> 
+</div> 
+
+<script src="script.js"></script>
 </body>
 </html>
