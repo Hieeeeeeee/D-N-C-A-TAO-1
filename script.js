@@ -1,9 +1,9 @@
 /* ================= DỮ LIỆU KHỞI TẠO ================= */
 let savedUser = null;
 let listStudents = [
-    { maSV: "SV001", name: "La Văn Hiến", age: 20, subject: "Toán rời rạc", score: 8.5 },
+    { maSV: "SV001", name: "La Văn Hiến", age: 20, subject: "Toán rời rạc", score: 1.8 },
     { maSV: "SV002", name: "Dương Việt Nam", age: 36, subject: "Kiểm thử phần mềm", score: 3.6 },
-    { maSV: "SV003", name: "Nguyễn Trung Hiếu", age: 20, subject: "Lập trình Web", score: 9.0 }
+    { maSV: "SV003", name: "Nguyễn Trung Hiếu", age: 20, subject: "Lập trình Web", score: 9.6 }
 ];
 
 /* MODAL & NAV */
@@ -294,4 +294,88 @@ function calculateTuition() {
     }
     document.getElementById("resTotal").innerText = total.toLocaleString('vi-VN') + " VNĐ";
     success.innerText = "Xác nhận thanh toán thành công!";
+}
+/* ================= 1. ĐIỀU HƯỚNG MENU ================= */
+// Thêm 'scholarshipSection' vào danh sách ẩn để Menu hoạt động đúng
+function hideAllSections() {
+    const sections = ["homeContent", "scoreForm", "searchSection", "paymentSection", "scholarshipSection"];
+    sections.forEach(s => {
+        const el = document.getElementById(s);
+        if (el) el.style.display = "none";
+    });
+}
+
+function showScholarshipForm() {
+    hideAllSections();
+    document.getElementById("scholarshipSection").style.display = "block";
+}
+
+/* ================= 2. LOGIC XÉT HỌC BỔNG (SIÊU BẮT LỖI) ================= */
+function checkScholarship() {
+    // Lấy dữ liệu từ form
+    const gpa = parseFloat(document.getElementById("scholarshipGpa").value);
+    const credits = parseInt(document.getElementById("scholarshipCredits").value);
+    const training = parseInt(document.getElementById("scholarshipTraining").value);
+    const isDisciplined = document.getElementById("scholarshipDiscipline").checked;
+    
+    // Các vùng hiển thị thông báo
+    const err = document.getElementById("scholarshipError");
+    const resBox = document.getElementById("scholarshipResultBox");
+    const resLevel = document.getElementById("scholarshipLevel");
+    const resNote = document.getElementById("scholarshipNote");
+
+    // Reset giao diện trước khi xét
+    err.innerText = "";
+    resBox.style.display = "none";
+
+    // --- BẮT LỖI DỮ LIỆU ĐẦU VÀO (VALIDATION) ---
+    if (isNaN(gpa) || isNaN(credits) || isNaN(training)) {
+        err.innerText = "LỖI: Vui lòng nhập đầy đủ GPA, số tín chỉ và điểm rèn luyện!";
+        return;
+    }
+
+    // Kiểm tra biên GPA (0 - 4.0)
+    if (gpa < 0 || gpa > 4.0) {
+        err.innerText = "LỖI: GPA phải nằm trong khoảng từ 0 đến 4.0!";
+        return;
+    }
+
+    // Kiểm tra biên Điểm rèn luyện (0 - 100)
+    if (training < 0 || training > 100) {
+        err.innerText = "LỖI: Điểm rèn luyện phải từ 0 đến 100!";
+        return;
+    }
+
+    // --- LOGIC XÉT DUYỆT THEO BẢNG QUYẾT ĐỊNH ---
+    
+    // 1. Điều kiện loại (Ngắt sớm)
+    if (isDisciplined || credits < 15) {
+        resBox.style.display = "block";
+        resLevel.innerText = "KHÔNG ĐẠT";
+        resLevel.style.color = "red";
+        resNote.innerText = isDisciplined ? "Lý do: Sinh viên bị kỷ luật trong học kỳ." : "Lý do: Không đủ số tín chỉ tối thiểu (15 tín).";
+        return;
+    }
+
+    // 2. Phân loại mức học bổng
+    resBox.style.display = "block";
+    
+    // Mức Xuất sắc: GPA >= 3.6 VÀ Rèn luyện >= 90
+    if (gpa >= 3.6 && training >= 90) {
+        resLevel.innerText = "HỌC BỔNG XUẤT SẮC";
+        resLevel.style.color = "#6f42c1";
+        resNote.innerText = "Chúc mừng! Bạn đạt thành tích học tập và rèn luyện ở mức tối đa.";
+    } 
+    // Mức Giỏi: GPA >= 3.2 VÀ Rèn luyện >= 80
+    else if (gpa >= 3.2 && training >= 80) {
+        resLevel.innerText = "HỌC BỔNG GIỎI";
+        resLevel.style.color = "green";
+        resNote.innerText = "Bạn đủ điều kiện nhận học bổng loại Giỏi.";
+    } 
+    // Không đạt các mốc trên
+    else {
+        resLevel.innerText = "KHÔNG ĐẠT";
+        resLevel.style.color = "red";
+        resNote.innerText = "GPA hoặc Điểm rèn luyện chưa đạt ngưỡng xét học bổng.";
+    }
 }
