@@ -252,48 +252,84 @@ function handleSearch() {
     renderSearchTable(filtered);
 }
 function calculateTuition() {
-    clearMessages();
-    const studentName = document.getElementById("payStudentSelect").value;
+    clearMessages(); // Hàm cũ của bạn để xóa thông báo error/success
+    
+    const selectedName = document.getElementById("payStudentSelect").value;
+    const maSVInput = document.getElementById("payMaSV").value.trim();
+    const classInput = document.getElementById("payClass").value.trim();
     const creditsVal = document.getElementById("courseCredits").value.trim();
-    // Bổ sung dòng lấy giá trị phương thức thanh toán
-    const method = document.getElementById("paymentMethod").value; 
+    const method = document.getElementById("paymentMethod").value;
     const agree = document.getElementById("agreeTerms").checked;
     
     const err = document.getElementById("paymentError");
-    const success = document.getElementById("paymentSuccess");
     const resDiv = document.getElementById("paymentResult");
+    const success = document.getElementById("paymentSuccess");
 
     resDiv.style.display = "none";
 
-    // Bắt lỗi Rỗng cho cả Sinh viên, Số tín và Phương thức thanh toán
-    if (!studentName || !creditsVal || !method) {
-        err.innerText = "LỖI: Vui lòng điền đầy đủ thông tin!";
+    // --- BẮT TẤT CẢ CÁC LỖI (VALIDATION) ---
+
+    // 1. Lỗi bỏ trống
+    if (!selectedName || !maSVInput || !classInput || !creditsVal || !method) {
+        err.innerText = "LỖI: Vui lòng nhập đầy đủ thông tin, không được để trống!";
         return;
     }
 
-    // Bắt lỗi giá trị biên cho số tín chỉ (1-20)
+    // 2. Lỗi sai định dạng Mã SV (Giả sử mã SV phải có ít nhất 3 ký tự)
+    if (maSVInput.length < 3) {
+        err.innerText = "LỖI: Mã sinh viên không hợp lệ (phải từ 3 ký tự trở lên)!";
+        return;
+    }
+
+    // 3. Lỗi kiểm tra sự tồn tại và khớp dữ liệu
+    const student = listStudents.find(s => s.name === selectedName);
+    if (!student) {
+        err.innerText = "LỖI: Không tìm thấy dữ liệu sinh viên này trong hệ thống!";
+        return;
+    }
+    
+    // Kiểm tra Mã SV nhập vào có khớp với Mã SV của người được chọn không
+    if (student.maSV.toUpperCase() !== maSVInput.toUpperCase()) {
+        err.innerText = `LỖI: Mã SV "${maSVInput}" không khớp với sinh viên "${selectedName}"!`;
+        return;
+    }
+
+    // 4. Lỗi định dạng số tín chỉ (Phải là số nguyên)
     const credits = Number(creditsVal);
-    if (isNaN(credits) || credits < 1 || credits > 20) {
-        err.innerText = "LỖI: Số tín chỉ phải từ 1 đến 20!";
+    if (isNaN(credits) || !Number.isInteger(credits)) {
+        err.innerText = "LỖI: Số tín chỉ phải là một số nguyên hợp lệ!";
         return;
     }
 
-    // Bắt lỗi chưa đồng ý điều khoản
+    // 5. Lỗi giá trị biên tín chỉ (1 - 20)
+    if (credits < 1 || credits > 20) {
+        err.innerText = "LỖI: Số tín chỉ đăng ký phải nằm trong khoảng từ 1 đến 20!";
+        return;
+    }
+
+    // 6. Lỗi kiểm tra lớp học (Không chứa ký tự đặc biệt, ít nhất 2 ký tự)
+    const classRegex = /^[a-zA-Z0-9\s-]+$/;
+    if (classInput.length < 2 || !classRegex.test(classInput)) {
+        err.innerText = "LỖI: Tên lớp không hợp lệ hoặc quá ngắn!";
+        return;
+    }
+
+    // 7. Lỗi chưa đồng ý điều khoản
     if (!agree) {
-        err.innerText = "LỖI: Bạn chưa đồng ý với điều khoản thanh toán!";
+        err.innerText = "LỖI: Bạn phải tích chọn đồng ý với điều khoản thanh toán!";
         return;
     }
 
-    // Nếu vượt qua tất cả các lỗi trên thì mới tính tiền
+    // --- NẾU VƯỢT QUA TẤT CẢ LỖI THÌ THỰC HIỆN TÍNH TOÁN ---
     const total = credits * 500000;
     resDiv.style.display = "block";
-    document.getElementById("resName").innerText = studentName;
-    // Hiển thị phương thức đã chọn vào kết quả nếu cần
-    if(document.getElementById("resMethod")) {
-        document.getElementById("resMethod").innerText = method;
-    }
+    
+    document.getElementById("resMaSV").innerText = student.maSV;
+    document.getElementById("resName").innerText = student.name;
+    document.getElementById("resClass").innerText = classInput;
     document.getElementById("resTotal").innerText = total.toLocaleString('vi-VN') + " VNĐ";
-    success.innerText = "Xác nhận thanh toán thành công!";
+    
+    success.innerText = "Xác nhận thanh toán học phí thành công!";
 }
 /* ================= 1. ĐIỀU HƯỚNG MENU ================= */
 // Thêm 'scholarshipSection' vào danh sách ẩn để Menu hoạt động đúng
